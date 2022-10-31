@@ -1,6 +1,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const config = require('config');
 const myArgs = process.argv.slice(2);
+let InputId = '';
 console.log(myArgs)
 if(myArgs.length == 0) { 
     console.log('Geen argumenten meegegeven, gebruik: node start.js CNAME record'),
@@ -31,8 +32,15 @@ exports.default = async ({ page }) => {
     ]);
     console.log('we zijn op de dns pagina');
     await page.waitForTimeout(1000);
-    await page.evaluate(() => { document.getElementById('dnsedit_records_2_content').value = ''; });
-    await page.type('#dnsedit_records_2_content', record);
+    //get all input fields
+    const inputFields = await page.$$('input[id$=name]');
+    //get all values from input fields that start with _acme-challenge
+    const inputValues = await page.$$eval('input[id$=name]', inputs => inputs.filter(input => input.value.startsWith('_acme-challenge')).map(input => input.id));
+    //get the first id of the input field
+    InputId = inputValues[0].replace('name', 'content');
+
+    await clear(page, 'input[id="' + InputId + '"]');
+    await page.type('#' + InputId, record);
     console.log('we gaan de dns aanpassen'),
     await page.click('#dnsedit_submit'),
     await page.waitForTimeout(1000);
@@ -40,3 +48,9 @@ exports.default = async ({ page }) => {
 
 
 };
+
+async function clear(page, selector) {
+    await page.evaluate(selector => {
+      document.querySelector(selector).value = "";
+    }, selector);
+  }

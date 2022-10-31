@@ -19,5 +19,3 @@
 1. npm start (cname-record)
 
 # todo
-
-- de script gaat er vanuit dat de cname record op de 3de plek staat als dit niet zo is dan zal er een andere record aangepast worden.
