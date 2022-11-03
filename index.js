@@ -1,9 +1,9 @@
 const { default: start } = require('./start.js');
 const puppeteer = require('puppeteer-core');
-
+const config = require('config');
 (async () => {
   const browser = await puppeteer.connect({
-    browserWSEndpoint: 'ws://localhost:8080/'
+    browserWSEndpoint: config.get('browserless.url')
   });
   const page = await browser.newPage();
 

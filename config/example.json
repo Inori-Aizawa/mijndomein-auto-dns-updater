@@ -4,5 +4,8 @@
           "wachtwoord": "",
           "email": "",
           "domein": ""
+      },
+      "browserless":{
+        "url": "wss://localhost:8080"
       }
   }

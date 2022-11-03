@@ -23,6 +23,7 @@ exports.default = async ({ page }) => {
         page.waitForNavigation(),
     ]);
     console.log('we zijn ingelogd');
+    await AcceptCookiePolicyIfExists(page)
     await page.goto('https://www.mijndomein.nl/account/product/dmp/' + config.get('mijndomein.domein'));
     await page.waitForTimeout(1000);
     await Promise.all([
@@ -30,6 +31,7 @@ exports.default = async ({ page }) => {
         console.log('we gaan naar de dns pagina'),
         page.waitForNavigation(),
     ]);
+    await AcceptCookiePolicyIfExists(page)
     console.log('we zijn op de dns pagina');
     await page.waitForTimeout(1000);
     //get all input fields
@@ -48,6 +50,14 @@ exports.default = async ({ page }) => {
 
 
 };
+async function AcceptCookiePolicyIfExists(page){
+    await page.waitForTimeout(1000);
+    if(await page.$('#dd_popup_container_side_acceptButton') !== null){
+        await page.click('#dd_popup_container_side_acceptButton');
+        return true;
+    }
+    return false;
+}
 
 async function clear(page, selector) {
     await page.evaluate(selector => {
